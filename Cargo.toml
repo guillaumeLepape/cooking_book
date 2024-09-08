@@ -1,0 +1,27 @@
+[package]
+name = "cooking_book"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+diesel = {version = "2.2.4", features = ["sqlite", "returning_clauses_for_sqlite_3_35", "time", "r2d2"]}
+dotenvy = "0.15.7"
+libsqlite3-sys = {version = "0.30.1", features = ["bundled"]}
+regex = "1.10.6"
+rocket = {version = "0.5.1", features = ["json"]}
+serde = {version = "1.0.210", features = ["derive"]}
+serde_json = "1.0.128"
+time = "0.3.36"
+
+[dependencies.uuid]
+version = "1.10.0"
+features = [
+    "v4",  # Lets you generate random UUIDs
+    "fast-rng",  # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics",  # Enable better diagnostics for compile-time UUIDs
+]
+
+[dev-dependencies]
+diesel_migrations = "2.2.0"
+rstest = "0.22.0"
+temp-env = "0.3.6"

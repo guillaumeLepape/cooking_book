@@ -1,5 +1,5 @@
 alias s := setup
-alias i := install
+alias b := build
 alias t := test
 alias tc := test-cov
 alias r := run
@@ -8,34 +8,26 @@ alias f := fmt
 alias l := lint
 
 setup:
-    uv venv {{ justfile_directory() }}/.venv
-    . {{ justfile_directory() }}/.venv/bin/activate
-    just install
+    just build
     pre-commit install --install-hooks
- 
-install:
-    uv pip install -r {{ justfile_directory() }}/requirements.txt
+
+build:
+    cargo build
 
 test:
-    pytest -vv
+    cargo test
 
 test-cov:
-    pytest --cov={{ justfile_directory() }}/cooking \
-      --cov={{ justfile_directory() }}/scripts \
-      --cov={{ justfile_directory() }}/tests \
-      --cov={{ justfile_directory() }}/testing \
-      --cov-report=xml \
-      --cov-config={{ justfile_directory() }}/pyproject.toml \
-      -vv
+    cargo tarpaulin --out Html
 
 run:
-    uvicorn --reload cooking:app
+    cargo run --bin cooking_book
 
 check:
     pre-commit run -a
 
 fmt:
-    pre-commit run -a ruff-format
+    cargo fmt
 
 lint:
-    pre-commit run -a ruff
+    cargo clippy
