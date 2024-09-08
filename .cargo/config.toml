@@ -1,0 +1,15 @@
+[build]
+rustflags = [
+    "-W",
+    "clippy::pedantic",
+    "-W",
+    "clippy::all",
+    "-W",
+    "clippy::nursery",
+    "-W",
+    "clippy::style",
+    "-A",
+    "clippy::missing_errors_doc",
+    "-A",
+    "clippy::missing_panics_doc",
+]

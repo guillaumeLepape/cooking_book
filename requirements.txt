@@ -1,5 +1,0 @@
-pre-commit==3.8.0
-fastapi==0.112.2
-fastui==0.7.0
-uvicorn==0.30.6
-python-multipart==0.0.9

@@ -1,0 +1,5 @@
+-- Your SQL goes here
+CREATE TABLE recipes(
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name TEXT NOT NULL
+);

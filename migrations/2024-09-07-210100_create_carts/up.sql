@@ -1,0 +1,5 @@
+-- Your SQL goes here
+CREATE TABLE carts(
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    created_at DATETIME NOT NULL
+);
