@@ -98,8 +98,6 @@ def fetch_recipe_ingredients(cursor: sqlite3.Cursor, recipe_id: int) -> List[Ing
 
     ingredient_rows = cursor.fetchall()
 
-    print(ingredient_rows[0])
-
     return [
         Ingredient(preposition=row[0], name=row[1], quantity=row[2], unit=row[3])
         for row in ingredient_rows
@@ -238,15 +236,29 @@ def insert_recipe(connection: sqlite3.Connection, recipe_in: RecipeIn) -> Option
     if recipe_id is None:
         return None
 
-    for ingredient in recipe_in.ingredients:
+    result = Recipe(id=recipe_id, name=recipe_in.name, ingredients=[], steps=[])
+
+    for raw_ingredient in recipe_in.ingredients:
+        ingredient = Ingredient.parse(raw_ingredient)
+
+        result.ingredients.append(ingredient)
+
         cursor.execute(
             "INSERT INTO ingredients(recipe_id, preposition, name, quantity, unit) VALUES (?, ?, ?, ?, ?)",
-            (recipe_id, "", ingredient.name, ingredient.quantity, ingredient.unit),
+            (
+                recipe_id,
+                ingredient.preposition,
+                ingredient.name,
+                ingredient.quantity,
+                ingredient.unit,
+            ),
         )
 
     for step in recipe_in.steps:
+        result.steps.append(step)
+
         cursor.execute("INSERT INTO steps(recipe_id, description) VALUES (?, ?)", (recipe_id, step))
 
     connection.commit()
 
-    return Recipe(id=recipe_id, **recipe_in.model_dump())
+    return result
