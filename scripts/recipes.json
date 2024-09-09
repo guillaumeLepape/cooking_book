@@ -2,41 +2,65 @@
     {
         "name": "Saucisses aux lentilles",
         "ingredients": [
-            {
-                "name": "Lentilles vertes",
-                "quantity": 350,
-                "unit": "g"
-            },
-            {
-                "name": "Saucisses de Montbéliard",
-                "quantity": 300,
-                "unit": "g"
-            },
-            {
-                "name": "Lardons fumés",
-                "quantity": 200,
-                "unit": "g"
-            },
-            {
-                "name": "Oignon",
-                "quantity": 1,
-                "unit": ""
-            },
-            {
-                "name": "Ail",
-                "quantity": 2,
-                "unit": "gousse"
-            },
-            {
-                "name": "Laurier",
-                "quantity": 2,
-                "unit": "feuille"
-            }
+            "350 g de Lentilles vertes",
+            "300 g de saucisses de Montbéliard",
+            "200 g de lardons fumés",
+            "1 oignon",
+            "2 gousse d'ail",
+            "2 feuille de laurier"
         ],
         "steps": [
             "Eplucher et émincer l'oignon. Peler les gousses d'ail.",
             "Dans une cocotte, mettre les lentilles, les saucisses, les lardons, l'oignon éminces, les gousses d'ail et les feuilles de laurier. Ajouter 70 cl d'eau, saler et poivrer.",
             "Faire cuire pendant 40 minutes sur feu moyen à couvert. Servir bien chaud."
+        ]
+    },
+    {
+        "name": "Gratin de gnocchi au saumon et épinards",
+        "ingredients": [
+            "400g de gnocchi",
+            "300g d'épinards surgelés",
+            "200g de pavé de saumon",
+            "150 g parmesan râpé",
+            "0.5litre de lait",
+            "30.0 g de farine",
+            "30g de beurre"
+        ],
+        "steps": [
+            "Faire cuire les gnocchi dans une grande casserole d'eau bouillante salée en suivant les indications sur le sachet. ",
+            "Dans une casserole, faire cuire les épinards avec un peu de beurre pendant 10 minutes.",
+            "Découper les pavés de saumon en dés. Préchauffer le four à 180°C.",
+            "Préparer la béchamel en faisant fondre le beurre coupé en dés dans une casserole. Ajouter la farine en remuant. Verser le lait progressivement en continuant de remuer jusqu'à ce que la crème épaississe. Ajouter le parmesan, saler et poivrer.",
+            "Déposer les gnocchi égouttés dans le fond d'un plat à gratin. Ajoutez la moitié de la béchamel. Recouvrir de saumon et d'épinards et ajouter le reste de béchamel. Enfourner pour 20 minutes à 180°C. Servir aussitôt."
+        ]
+    },
+    {
+        "name": "Saucisses aux lentilles",
+        "ingredients": [
+            "350g de lentilles vertes",
+            "300g de saucisses de Montbéliard",
+            "200g de lardons fumés",
+            "1 oignon",
+            "2 gousse ail",
+            "2 feuille de laurier"
+        ],
+        "steps": [
+            "Eplucher et émincer l'oignon. Peler les gousses d'ail. ",
+            "Dans une cocotte, mettre les lentilles, les saucisses, les lardons, l'oignon éminces, les gousses d'ail et les feuilles de laurier. Ajouter 70 cl d'eau, saler et poivrer.",
+            "Faire cuire pendant 40 minutes sur feu moyen à couvert. Servir bien chaud."
+        ]
+    },
+    {
+        "name": "Tapenade : la meilleure recette",
+        "ingredients": [
+            "200g d'olive noir",
+            "8 câpres",
+            "5filet anchois à l'huile",
+            "1 gousse d'ail"
+        ],
+        "steps": [
+            "Hacher finement la gousse d’ail.",
+            "Mettre dans le bol d’un mixeur les filets d’anchois, les câpres, la gousse d’ail hachée, les olives noires et l’huile d’olive et mixer assez fin."
         ]
     }
 ]

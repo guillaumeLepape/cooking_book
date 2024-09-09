@@ -1,28 +1,15 @@
 import re
 from datetime import datetime
-from typing import List, Tuple
+from typing import List
 
 from pydantic import BaseModel
 
 
-def need_preposition(name: str) -> bool:
-    return not name.startswith("d'") and not name.startswith("de ")
-
-
 def infer_preposition(name: str) -> str:
-    split_name = name.split(maxsplit=1)
-
-    if split_name[0][0] in "aeiouyh":
+    if name[0] in "aeiouyh":
         return "d'"
 
     return "de "
-
-
-def split_preposition(name: str) -> Tuple[str, str]:
-    if name.startswith("d'"):
-        return "d'", name[2:]
-
-    return "de ", name[3:]
 
 
 class Ingredient(BaseModel):
@@ -38,8 +25,6 @@ class Ingredient(BaseModel):
         )
 
         if regex is not None:
-            print(regex.groups())
-
             groups = regex.groups()
 
             if groups[2] is None:
@@ -74,9 +59,17 @@ class IngredientDb(BaseModel):
     unit: str
 
 
+class IngredientOut(BaseModel):
+    id: int
+    preposition: str
+    name: str
+    quantity: float
+    unit: str
+
+
 class RecipeIn(BaseModel):
     name: str
-    ingredients: List[Ingredient]
+    ingredients: List[str]
     steps: List[str]
 
 
@@ -84,6 +77,13 @@ class Recipe(BaseModel):
     id: int
     name: str
     ingredients: List[Ingredient]
+    steps: List[str]
+
+
+class RecipeOut(BaseModel):
+    id: int
+    name: str
+    ingredients: List[IngredientOut]
     steps: List[str]
 
 

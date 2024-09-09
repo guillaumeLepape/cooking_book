@@ -12,7 +12,7 @@ from .db_utils import (
     insert_recipe,
     setup_db,
 )
-from .models import Cart, Recipe, RecipeIn
+from .models import Cart, Recipe, RecipeIn, RecipeOut
 
 setup_db()
 
@@ -20,7 +20,7 @@ app = FastAPI()
 
 
 @app.post("/recipes/")
-def create_recipe(recipe_in: RecipeIn, connection: ConnectionDep) -> Recipe:
+def create_recipe(recipe_in: RecipeIn, connection: ConnectionDep) -> RecipeOut:
     recipe = insert_recipe(connection, recipe_in)
 
     if recipe is None:
