@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from typing import List, Tuple
 
@@ -32,25 +33,37 @@ class Ingredient(BaseModel):
 
     @classmethod
     def parse(cls, raw_ingredient: str) -> "Ingredient":
-        parts = raw_ingredient.split(maxsplit=2)
+        regex = re.search(
+            "^([0-9]+)[,.]?([0-9]+)?[ ]?(?:(.*?)[ ])?[ ]?(de |d')?(.*)$", raw_ingredient
+        )
 
-        if len(parts) == 3:
-            quantity = float(parts[0].replace(",", "."))
-            unit = parts[1]
-            name = parts[2]
+        if regex is not None:
+            print(regex.groups())
+
+            groups = regex.groups()
+
+            if groups[2] is None:
+                unit = ""
+            else:
+                unit = groups[2]
+
+            name = groups[4]
+
+            if unit == "":
+                preposition = ""
+            elif groups[3] is None:
+                preposition = infer_preposition(name)
+            else:
+                preposition = groups[3]
+
+            if groups[1] is None:
+                quantity = float(groups[0])
+            else:
+                quantity = float(groups[0] + "." + groups[1])
+
+            return Ingredient(name=name, preposition=preposition, quantity=quantity, unit=unit)
         else:
-            quantity = float(parts[0].replace(",", "."))
-            unit = ""
-            name = parts[1]
-
-        if not unit:
-            preposition = ""
-        elif need_preposition(name):
-            preposition = infer_preposition(name)
-        else:
-            preposition, name = split_preposition(name)
-
-        return cls(name=name, preposition=preposition, quantity=quantity, unit=unit)
+            raise ValueError(f"Unable to parse {raw_ingredient}")
 
 
 class IngredientDb(BaseModel):
