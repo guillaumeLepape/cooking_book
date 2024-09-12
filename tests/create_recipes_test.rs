@@ -19,7 +19,18 @@ fn test_create_recipes(create_database_for_test: (DBConnection, PathBuf)) {
 
             let all_recipes = fetch_all_recipes(&mut connection).unwrap();
 
-            assert_eq!(all_recipes.len(), 4);
+            assert_eq!(all_recipes.len(), 3);
+
+            let recipe_names: Vec<String> = all_recipes.iter().map(|r| r.name.clone()).collect();
+
+            assert_eq!(
+                recipe_names,
+                vec![
+                    "Saucisses aux lentilles",
+                    "Gratin de gnocchi au saumon et épinards",
+                    "Tapenade : la meilleure recette"
+                ]
+            );
         },
     );
 }
