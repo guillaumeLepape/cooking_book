@@ -1,5 +1,6 @@
 use cooking_book::create_app;
 use cooking_book::models::{Data, RecipeWithIngredientsOut};
+use cooking_book::response::{Errors, HTTPError};
 
 use rocket::http::Status;
 use rocket::local::blocking::Client;
@@ -64,6 +65,29 @@ fn create_and_retrieve_recipe(
                 .into_json::<Data<RecipeWithIngredientsOut>>()
                 .unwrap(),
             recipe_out
+        );
+    });
+}
+
+#[rstest]
+fn recipe_not_found_test(
+    create_database_for_test: (cooking_book::db::DBConnection, std::path::PathBuf),
+) {
+    let (_, database_path) = create_database_for_test;
+    temp_env::with_var("DATABASE_URL", Some(database_path), || {
+        let client = Client::tracked(create_app()).expect("valid rocket instance");
+
+        let not_found_recipe_response = client.get("/recipes/1").dispatch();
+
+        assert_eq!(not_found_recipe_response.status(), Status::NotFound);
+        assert_eq!(
+            not_found_recipe_response.into_json::<Errors>().unwrap(),
+            Errors {
+                errors: vec![HTTPError {
+                    status_code: Status::NotFound,
+                    message: "No recipe found with id 1".to_string()
+                }]
+            }
         );
     });
 }

@@ -22,7 +22,7 @@ pub fn create_database_for_test() -> (DBConnection, PathBuf) {
 
     let database_path = test_db_dir.join(format!("cooking_book_test_{id}.db"));
 
-    let connection = temp_env::with_var("DATABASE_URL", Some(database_path.clone()), || {
+    let connection = temp_env::with_var("DATABASE_URL", Some(&database_path), || {
         // Establish the connection to the database and make it mutable.
         let pool = connect().unwrap();
         let mut connection = DBConnection(pool.get().unwrap());

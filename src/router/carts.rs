@@ -23,7 +23,7 @@ pub fn retrieve(cart_id: i32, mut connection: DBConnection) -> HttpResult<CartWi
     match fetch_one_cart_and_recipes(cart_id, &mut connection) {
         Ok(cart) => Ok(ok(Data { data: cart })),
         Err(DieselError::NotFound) => {
-            Err(not_found_error(format!("No cart found with id={cart_id}")))
+            Err(not_found_error(format!("No cart found with id {cart_id}")))
         }
         Err(_) => Err(internal_server_error("Database error".to_owned())),
     }
@@ -36,7 +36,7 @@ pub fn delete(cart_id: i32, mut connection: DBConnection) -> EmptyHttpResult {
     };
 
     if deleted_records == 0 {
-        return Err(not_found_error(format!("No cart found with id={cart_id}")));
+        return Err(not_found_error(format!("No cart found with id {cart_id}")));
     }
 
     Ok(no_content())
@@ -52,11 +52,11 @@ pub fn add_recipe(
         Ok(res) => res,
         Err(DieselError::DatabaseError(DatabaseErrorKind::ForeignKeyViolation, _)) => {
             if fetch_one_cart(cart_id, &mut connection).is_err() {
-                return Err(not_found_error(format!("No cart found with id={cart_id}")));
+                return Err(not_found_error(format!("No cart found with id {cart_id}")));
             }
 
             return Err(not_found_error(format!(
-                "No recipe found with id={recipe_id}"
+                "No recipe found with id {recipe_id}"
             )));
         }
         Err(_) => {
