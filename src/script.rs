@@ -40,22 +40,6 @@ pub fn create_recipes() {
             ]
         },
         RecipeIn {
-            name: "Saucisses aux lentilles".to_owned(),
-            ingredients: vec![
-                "350g de lentilles vertes".to_owned(),
-                "300g de saucisses de Montb\u{e9}liard".to_owned(),
-                "200g de lardons fum\u{e9}s".to_owned(),
-                "1 oignon".to_owned(),
-                "2 gousse ail".to_owned(),
-                "2 feuille de laurier".to_owned(),
-            ],
-            steps: vec![
-                "Eplucher et \u{e9}mincer l'oignon. Peler les gousses d'ail.".to_owned(),
-                "Dans une cocotte, mettre les lentilles, les saucisses, les lardons, l'oignon \u{e9}minces, les gousses d'ail et les feuilles de laurier. Ajouter 70 cl d'eau, saler et poivrer.".to_owned(),
-                "Faire cuire pendant 40 minutes sur feu moyen \u{e0} couvert. Servir bien chaud.".to_owned(),
-            ]
-        },
-        RecipeIn {
             name: "Tapenade : la meilleure recette".to_owned(),
             ingredients: vec![
                 "200g d'olive noir".to_owned(),
