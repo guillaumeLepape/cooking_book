@@ -37,7 +37,7 @@ pub fn retrieve(
     match fetch_one_recipe(recipe_id, &mut connection) {
         Ok(recipe) => Ok(ok(Data { data: recipe })),
         Err(DieselError::NotFound) => Err(not_found_error(format!(
-            "No recipe found with id={recipe_id}"
+            "No recipe found with id {recipe_id}"
         ))),
         Err(_) => Err(internal_server_error("Database error".to_owned())),
     }

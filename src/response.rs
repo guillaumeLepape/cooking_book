@@ -5,13 +5,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::models::Data;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct HTTPError {
     pub status_code: Status,
     pub message: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Errors {
     pub errors: Vec<HTTPError>,
 }
