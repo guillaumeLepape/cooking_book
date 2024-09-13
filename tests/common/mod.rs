@@ -3,6 +3,7 @@ use cooking_book::db::{connect, DBConnection};
 use diesel_migrations::{
     embed_migrations, EmbeddedMigrations, HarnessWithOutput, MigrationHarness,
 };
+use rocket::local::blocking::Client;
 use rstest::fixture;
 use std::fs;
 use std::path::Path;
@@ -14,9 +15,7 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
 pub fn create_database_for_test() -> (DBConnection, String) {
     let test_db_dir = Path::new("test_db");
 
-    if !test_db_dir.is_dir() {
-        assert!(fs::create_dir(test_db_dir).is_ok());
-    }
+    assert!(fs::create_dir_all(test_db_dir).is_ok());
 
     let id = Uuid::new_v4();
 
@@ -39,4 +38,12 @@ pub fn create_database_for_test() -> (DBConnection, String) {
         connection,
         database_path.into_os_string().into_string().unwrap(),
     )
+}
+
+#[fixture]
+pub fn client(create_database_for_test: (DBConnection, String)) -> Client {
+    let (_, database_url) = create_database_for_test;
+
+    Client::tracked(cooking_book::create_app().manage(connect(&database_url)))
+        .expect("expect valid rocket instance")
 }

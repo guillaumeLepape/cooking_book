@@ -1,7 +1,7 @@
 use crate::schema::{cart_recipes, carts, ingredients, recipes, steps};
 use diesel::prelude::{Associations, Identifiable, Queryable, Selectable};
 use serde::{Deserialize, Serialize};
-use time;
+use time::PrimitiveDateTime;
 
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
@@ -32,7 +32,7 @@ pub struct Ingredient {
     pub unit: String,
 }
 
-#[derive(Debug, Queryable, Identifiable, Selectable, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, PartialEq, Queryable, Identifiable, Selectable, Serialize, Deserialize)]
 #[diesel(table_name = ingredients)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct IngredientOut {
@@ -53,7 +53,7 @@ pub struct Step {
     pub description: String,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, PartialEq, Deserialize, Serialize)]
 pub struct RecipeWithIngredientsOut {
     pub id: i32,
     pub name: String,
@@ -66,7 +66,7 @@ pub struct RecipeWithIngredientsOut {
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Cart {
     pub id: i32,
-    pub created_at: time::PrimitiveDateTime,
+    pub created_at: PrimitiveDateTime,
 }
 
 #[derive(Queryable, Identifiable, Selectable, Associations)]
@@ -80,7 +80,7 @@ pub struct CartRecipe {
     pub recipe_id: i32,
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Deserialize, PartialEq, Serialize)]
 pub struct CartWithRecipesOut {
     pub id: i32,
     pub created_at: String,

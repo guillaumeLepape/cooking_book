@@ -1,5 +1,3 @@
-use cooking_book::create_app;
-use cooking_book::db;
 use cooking_book::models::{Data, IngredientOut, RecipeWithIngredientsOut};
 use cooking_book::response::{Errors, HTTPError};
 
@@ -9,15 +7,10 @@ use rstest::rstest;
 use serde_json::json;
 
 mod common;
-use common::create_database_for_test;
+use common::client;
 
 #[rstest]
-fn create_and_retrieve_recipe(create_database_for_test: (db::DBConnection, String)) {
-    let (_, database_path) = create_database_for_test;
-
-    let client = Client::tracked(create_app().manage(db::connect(&database_path)))
-        .expect("valid rocket instance");
-
+fn create_and_retrieve_recipe(client: Client) {
     let create_recipe_response = client
         .post("/recipes")
         .json(&json!(
@@ -66,12 +59,7 @@ fn create_and_retrieve_recipe(create_database_for_test: (db::DBConnection, Strin
 }
 
 #[rstest]
-fn recipe_not_found_test(create_database_for_test: (db::DBConnection, String)) {
-    let (_, database_path) = create_database_for_test;
-
-    let client = Client::tracked(create_app().manage(db::connect(&database_path)))
-        .expect("valid rocket instance");
-
+fn recipe_not_found_test(client: Client) {
     let not_found_recipe_response = client.get("/recipes/1").dispatch();
 
     assert_eq!(not_found_recipe_response.status(), Status::NotFound);
@@ -87,12 +75,7 @@ fn recipe_not_found_test(create_database_for_test: (db::DBConnection, String)) {
 }
 
 #[rstest]
-fn recipe_already_exist_test(create_database_for_test: (db::DBConnection, String)) {
-    let (_, database_path) = create_database_for_test;
-
-    let client = Client::tracked(create_app().manage(db::connect(&database_path)))
-        .expect("valid rocket instance");
-
+fn recipe_already_exist_test(client: Client) {
     let recipe_in = json!(
         {
             "name": "Saumon fumé à la poele",
@@ -126,12 +109,7 @@ fn recipe_already_exist_test(create_database_for_test: (db::DBConnection, String
 }
 
 #[rstest]
-fn recipe_fetch_all_recipes_test(create_database_for_test: (db::DBConnection, String)) {
-    let (_, database_path) = create_database_for_test;
-
-    let client = Client::tracked(create_app().manage(db::connect(&database_path)))
-        .expect("valid rocket instance");
-
+fn recipe_fetch_all_recipes_test(client: Client) {
     let recipe_in1 = json!(
         {
             "name": "Recette 1",
