@@ -4,10 +4,10 @@ use crate::models::{
     RecipeWithIngredientsOut, Step,
 };
 use crate::schema::{cart_recipes, carts, ingredients, recipes, steps};
-use time;
 
 use diesel::prelude::*;
 use diesel::result::Error as DieselError;
+use time::format_description::well_known::Rfc3339;
 
 pub fn insert_recipe(
     recipe_in: &RecipeIn,
@@ -231,7 +231,7 @@ pub fn fetch_one_cart_and_recipes(
 
     let cart = CartWithRecipesOut {
         id: cart.id,
-        created_at: cart.created_at.to_string(),
+        created_at: cart.created_at.assume_utc().format(&Rfc3339).unwrap(),
         recipes: recipes_out,
     };
 
@@ -239,10 +239,8 @@ pub fn fetch_one_cart_and_recipes(
 }
 
 pub fn insert_cart(connection: &mut SqliteConnection) -> Result<CartWithRecipesOut, DieselError> {
-    let now_odt = time::OffsetDateTime::now_utc();
-
     let result: Vec<Cart> = match diesel::insert_into(carts::table)
-        .values(carts::created_at.eq(time::PrimitiveDateTime::new(now_odt.date(), now_odt.time())))
+        .default_values()
         .get_results(connection)
     {
         Ok(cart) => cart,
@@ -255,7 +253,7 @@ pub fn insert_cart(connection: &mut SqliteConnection) -> Result<CartWithRecipesO
 
     Ok(CartWithRecipesOut {
         id: cart.id,
-        created_at: cart.created_at.to_string(),
+        created_at: cart.created_at.assume_utc().format(&Rfc3339).unwrap(),
         recipes: Vec::new(),
     })
 }
