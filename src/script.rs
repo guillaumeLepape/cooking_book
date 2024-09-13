@@ -1,8 +1,8 @@
-use crate::db::connect;
+use crate::db::DBConnection;
 use crate::db_utils::insert_recipe;
 use crate::models::RecipeIn;
 
-pub fn create_recipes() {
+pub fn create_recipes(connection: &mut DBConnection) {
     let recipes = [
         RecipeIn {
             name: "Saucisses aux lentilles".to_owned(),
@@ -54,14 +54,10 @@ pub fn create_recipes() {
         }
     ];
 
-    let pool = &mut connect().unwrap();
-
-    let mut connection = pool.get().unwrap();
-
     for recipe in recipes {
         println!("Inserting recipe: {}", recipe.name);
 
-        match insert_recipe(&recipe, &mut connection) {
+        match insert_recipe(&recipe, connection) {
             Ok(recipe) => println!("Inserted recipe: {recipe:?}"),
             Err(error) => {
                 eprintln!("Error inserting recipe: {error}");

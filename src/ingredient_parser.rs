@@ -1,9 +1,9 @@
 use regex::Regex;
 
 fn infer_preposition(name: &str) -> &str {
-    let vowels = ['a', 'e', 'i', 'o', 'u', 'y', 'h'];
+    const VOWELS: [char; 7] = ['a', 'e', 'i', 'o', 'u', 'y', 'h'];
 
-    if vowels.iter().any(|v| name.starts_with(*v)) {
+    if VOWELS.iter().any(|v| name.starts_with(*v)) {
         "d'"
     } else {
         "de "
