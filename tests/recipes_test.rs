@@ -1,6 +1,6 @@
 use cooking_book::create_app;
 use cooking_book::db;
-use cooking_book::models::{Data, RecipeWithIngredientsOut};
+use cooking_book::models::{Data, IngredientOut, RecipeWithIngredientsOut};
 use cooking_book::response::{Errors, HTTPError};
 
 use rocket::http::Status;
@@ -110,5 +110,95 @@ fn recipe_already_exist_test(create_database_for_test: (db::DBConnection, String
     assert_eq!(
         create_recipe_already_exist_response.status(),
         Status::Conflict
-    )
+    );
+
+    assert_eq!(
+        create_recipe_already_exist_response
+            .into_json::<Errors>()
+            .unwrap(),
+        Errors {
+            errors: vec![HTTPError {
+                status_code: Status::Conflict,
+                message: "Recipe already exists: Saumon fumé à la poele".to_string()
+            }]
+        }
+    );
+}
+
+#[rstest]
+fn recipe_fetch_all_recipes_test(create_database_for_test: (db::DBConnection, String)) {
+    let (_, database_path) = create_database_for_test;
+
+    let client = Client::tracked(create_app().manage(db::connect(&database_path)))
+        .expect("valid rocket instance");
+
+    let recipe_in1 = json!(
+        {
+            "name": "Recette 1",
+            "ingredients": ["20g de sucre"],
+            "steps": ["Etape 1"]
+        }
+    );
+
+    let recipe_in2 = json!(
+        {
+            "name": "Recette 2",
+            "ingredients": ["30mL de lait"],
+            "steps": ["Etape 2"]
+        }
+    );
+
+    assert_eq!(
+        client
+            .post("/recipes")
+            .json(&recipe_in1)
+            .dispatch()
+            .status(),
+        Status::Created
+    );
+    assert_eq!(
+        client
+            .post("/recipes")
+            .json(&recipe_in2)
+            .dispatch()
+            .status(),
+        Status::Created
+    );
+
+    let response_fetch_all_recipes = client.get("/recipes").dispatch();
+
+    assert_eq!(response_fetch_all_recipes.status(), Status::Ok);
+    assert_eq!(
+        response_fetch_all_recipes
+            .into_json::<Data<Vec<RecipeWithIngredientsOut>>>()
+            .unwrap(),
+        Data {
+            data: vec![
+                RecipeWithIngredientsOut {
+                    id: 1,
+                    name: "Recette 1".to_string(),
+                    ingredients: vec![IngredientOut {
+                        id: 1,
+                        preposition: "de ".to_string(),
+                        name: "sucre".to_string(),
+                        quantity: 20.0,
+                        unit: "g".to_string()
+                    }],
+                    steps: vec!["Etape 1".to_string()]
+                },
+                RecipeWithIngredientsOut {
+                    id: 2,
+                    name: "Recette 2".to_string(),
+                    ingredients: vec![IngredientOut {
+                        id: 2,
+                        preposition: "de ".to_string(),
+                        name: "lait".to_string(),
+                        quantity: 30.0,
+                        unit: "mL".to_string()
+                    }],
+                    steps: vec!["Etape 2".to_string()]
+                }
+            ]
+        }
+    );
 }
