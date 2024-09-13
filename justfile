@@ -18,7 +18,7 @@ test:
     cargo test
 
 test-cov:
-    cargo tarpaulin --out Html
+    cargo tarpaulin --out Html --target-dir ./target/tarpaulin --skip-clean
 
 run:
     cargo run --bin cooking_book

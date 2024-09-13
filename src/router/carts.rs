@@ -13,7 +13,7 @@ use diesel::result::Error as DieselError;
 #[rocket::post("/")]
 pub fn create(mut connection: DBConnection) -> HttpResult<CartWithRecipesOut> {
     insert_cart(&mut connection).map_or_else(
-        |_| Err(internal_server_error("Database error".to_owned())),
+        |_| Err(internal_server_error()),
         |cart| Ok(created(Data { data: cart })),
     )
 }
@@ -25,14 +25,14 @@ pub fn retrieve(cart_id: i32, mut connection: DBConnection) -> HttpResult<CartWi
         Err(DieselError::NotFound) => {
             Err(not_found_error(format!("No cart found with id {cart_id}")))
         }
-        Err(_) => Err(internal_server_error("Database error".to_owned())),
+        Err(_) => Err(internal_server_error()),
     }
 }
 
 #[rocket::delete("/<cart_id>")]
 pub fn delete(cart_id: i32, mut connection: DBConnection) -> EmptyHttpResult {
     let Ok(deleted_records) = delete_from_cart(cart_id, &mut connection) else {
-        return Err(internal_server_error("Database error".to_owned()));
+        return Err(internal_server_error());
     };
 
     if deleted_records == 0 {
@@ -60,15 +60,15 @@ pub fn add_recipe(
             )));
         }
         Err(_) => {
-            return Err(internal_server_error("Database error".to_owned()));
+            return Err(internal_server_error());
         }
     };
 
     let Ok(cart_with_recipes) = fetch_one_cart_and_recipes(cart_id, &mut connection) else {
-        return Err(internal_server_error("Database error".to_owned()));
+        return Err(internal_server_error());
     };
 
-    Ok(ok(Data {
+    Ok(created(Data {
         data: cart_with_recipes,
     }))
 }

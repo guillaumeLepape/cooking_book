@@ -18,14 +18,14 @@ pub fn create(
         Err(DieselError::DatabaseError(DatabaseErrorKind::UniqueViolation, _)) => Err(conflict(
             format!("Recipe already exists: {}", recipe_inner.name),
         )),
-        Err(_) => Err(internal_server_error("Database error".to_owned())),
+        Err(_) => Err(internal_server_error()),
     }
 }
 
 #[rocket::get("/")]
 pub fn retrieve_all(mut connection: DBConnection) -> HttpResult<Vec<RecipeWithIngredientsOut>> {
     fetch_all_recipes(&mut connection).map_or_else(
-        |_| Err(internal_server_error("Database error".to_owned())),
+        |_| Err(internal_server_error()),
         |recipes| Ok(ok(Data { data: recipes })),
     )
 }
@@ -40,6 +40,6 @@ pub fn retrieve(
         Err(DieselError::NotFound) => Err(not_found_error(format!(
             "No recipe found with id {recipe_id}"
         ))),
-        Err(_) => Err(internal_server_error("Database error".to_owned())),
+        Err(_) => Err(internal_server_error()),
     }
 }

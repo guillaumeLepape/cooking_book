@@ -49,11 +49,11 @@ pub fn conflict(error_message: String) -> ErrorResponder {
 }
 
 #[must_use]
-pub fn internal_server_error(error_message: String) -> ErrorResponder {
+pub fn internal_server_error() -> ErrorResponder {
     ErrorResponder::InternalServerError(Json(Errors {
         errors: vec![HTTPError {
             status_code: Status::InternalServerError,
-            message: error_message,
+            message: "Database error".to_owned(),
         }],
     }))
 }

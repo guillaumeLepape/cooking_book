@@ -32,6 +32,3 @@ test_db/
 # tarpaulin coverage
 tarpaulin-report.html
 tarpaulin-report.json
-
-# dotenv
-.env
