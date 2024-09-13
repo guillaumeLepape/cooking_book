@@ -10,10 +10,11 @@ pub mod script;
 use crate::router::carts as cart_router;
 use crate::router::recipes as recipe_router;
 
+pub const DATABASE_URL: &str = "cooking_book.db";
+
 #[must_use]
 pub fn create_app() -> rocket::Rocket<rocket::Build> {
     rocket::build()
-        .manage(db::connect().unwrap())
         .mount(
             "/carts",
             rocket::routes![

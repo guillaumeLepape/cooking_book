@@ -7,32 +7,20 @@ use rocket::outcome::Outcome;
 use rocket::request::{self, FromRequest};
 use rocket::{Request, State};
 
-use dotenvy::dotenv;
-use std::env;
 use std::ops::{Deref, DerefMut};
 
-#[derive(Debug)]
-pub struct DBConnectionError;
+type ConnectionManager = r2d2::ConnectionManager<SqliteConnection>;
 
-pub type ConnectionManager = r2d2::ConnectionManager<SqliteConnection>;
+type Pool = r2d2::Pool<ConnectionManager>;
 
-pub type Pool = r2d2::Pool<ConnectionManager>;
-
-pub fn connect() -> Result<Pool, DBConnectionError> {
-    dotenv().ok();
-
-    let database_url = env::var("DATABASE_URL");
-
-    let Ok(database_url) = database_url else {
-        return Err(DBConnectionError);
-    };
-
+#[must_use]
+pub fn connect(database_url: &str) -> Pool {
     let manager = r2d2::ConnectionManager::<SqliteConnection>::new(database_url);
     let Ok(pool) = r2d2::Pool::new(manager) else {
-        return Err(DBConnectionError);
+        panic!("Error connecting to the database");
     };
 
-    Ok(pool)
+    pool
 }
 
 pub struct DBConnection(pub r2d2::PooledConnection<ConnectionManager>);

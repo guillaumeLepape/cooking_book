@@ -3,30 +3,28 @@ use cooking_book::db_utils::fetch_all_recipes;
 use cooking_book::script::create_recipes;
 
 use rstest::rstest;
-use std::path::PathBuf;
 
 mod common;
 use common::create_database_for_test;
 
 #[rstest]
-fn test_create_recipes(create_database_for_test: (DBConnection, PathBuf)) {
-    let (mut connection, database_path) = create_database_for_test;
-    temp_env::with_var("DATABASE_URL", Some(database_path), || {
-        create_recipes();
+fn test_create_recipes(create_database_for_test: (DBConnection, String)) {
+    let (mut connection, _) = create_database_for_test;
 
-        let all_recipes = fetch_all_recipes(&mut connection).unwrap();
+    create_recipes(&mut connection);
 
-        assert_eq!(all_recipes.len(), 3);
+    let all_recipes = fetch_all_recipes(&mut connection).unwrap();
 
-        let recipe_names: Vec<String> = all_recipes.iter().map(|r| r.name.clone()).collect();
+    assert_eq!(all_recipes.len(), 3);
 
-        assert_eq!(
-            recipe_names,
-            vec![
-                "Saucisses aux lentilles",
-                "Gratin de gnocchi au saumon et épinards",
-                "Tapenade : la meilleure recette"
-            ]
-        );
-    });
+    let recipe_names: Vec<String> = all_recipes.iter().map(|r| r.name.clone()).collect();
+
+    assert_eq!(
+        recipe_names,
+        vec![
+            "Saucisses aux lentilles",
+            "Gratin de gnocchi au saumon et épinards",
+            "Tapenade : la meilleure recette"
+        ]
+    );
 }
