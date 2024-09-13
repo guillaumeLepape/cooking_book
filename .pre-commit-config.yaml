@@ -32,3 +32,6 @@ repos:
     hooks:
       - id: pretty-format-toml
         args: [--autofix, --indent, "4", --trailing-commas, --no-sort]
+
+ci:
+  skip: [cargo-fmt]

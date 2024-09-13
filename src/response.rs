@@ -22,6 +22,8 @@ pub enum ErrorResponder {
     // Unauthorized(Json<T>),
     #[response(status = 404)]
     NotFound(Json<Errors>),
+    #[response(status = 409)]
+    Conflict(Json<Errors>),
     #[response(status = 500)]
     InternalServerError(Json<Errors>),
 }
@@ -31,6 +33,16 @@ pub fn not_found_error(error_message: String) -> ErrorResponder {
     ErrorResponder::NotFound(Json(Errors {
         errors: vec![HTTPError {
             status_code: Status::NotFound,
+            message: error_message,
+        }],
+    }))
+}
+
+#[must_use]
+pub fn conflict(error_message: String) -> ErrorResponder {
+    ErrorResponder::Conflict(Json(Errors {
+        errors: vec![HTTPError {
+            status_code: Status::Conflict,
             message: error_message,
         }],
     }))

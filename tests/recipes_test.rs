@@ -12,7 +12,7 @@ mod common;
 use common::create_database_for_test;
 
 #[rstest]
-fn create_and_retrieve_recipe(create_database_for_test: (cooking_book::db::DBConnection, String)) {
+fn create_and_retrieve_recipe(create_database_for_test: (db::DBConnection, String)) {
     let (_, database_path) = create_database_for_test;
 
     let client = Client::tracked(create_app().manage(db::connect(&database_path)))
@@ -66,7 +66,7 @@ fn create_and_retrieve_recipe(create_database_for_test: (cooking_book::db::DBCon
 }
 
 #[rstest]
-fn recipe_not_found_test(create_database_for_test: (cooking_book::db::DBConnection, String)) {
+fn recipe_not_found_test(create_database_for_test: (db::DBConnection, String)) {
     let (_, database_path) = create_database_for_test;
 
     let client = Client::tracked(create_app().manage(db::connect(&database_path)))
@@ -84,4 +84,31 @@ fn recipe_not_found_test(create_database_for_test: (cooking_book::db::DBConnecti
             }]
         }
     );
+}
+
+#[rstest]
+fn recipe_already_exist_test(create_database_for_test: (db::DBConnection, String)) {
+    let (_, database_path) = create_database_for_test;
+
+    let client = Client::tracked(create_app().manage(db::connect(&database_path)))
+        .expect("valid rocket instance");
+
+    let recipe_in = json!(
+        {
+            "name": "Saumon fumé à la poele",
+            "ingredients": ["125 g de saumon fumé"],
+            "steps": ["Mettre le saumon dans la poele. Cuire à feu doux pendant 10 minutes."]
+        }
+    );
+
+    let create_recipe_response = client.post("/recipes").json(&recipe_in).dispatch();
+
+    assert_eq!(create_recipe_response.status(), Status::Created);
+
+    let create_recipe_already_exist_response = client.post("/recipes").json(&recipe_in).dispatch();
+
+    assert_eq!(
+        create_recipe_already_exist_response.status(),
+        Status::Conflict
+    )
 }
