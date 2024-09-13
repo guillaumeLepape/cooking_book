@@ -3,7 +3,8 @@ use crate::db_utils::{
 };
 use crate::models::{CartWithRecipesOut, Data};
 use crate::response::{
-    created, internal_server_error, no_content, not_found_error, ok, EmptyHttpResult, HttpResult,
+    conflict, created, internal_server_error, no_content, not_found_error, ok, EmptyHttpResult,
+    HttpResult,
 };
 
 use crate::db::DBConnection;
@@ -57,6 +58,11 @@ pub fn add_recipe(
 
             return Err(not_found_error(format!(
                 "No recipe found with id {recipe_id}"
+            )));
+        }
+        Err(DieselError::DatabaseError(DatabaseErrorKind::UniqueViolation, _)) => {
+            return Err(conflict(format!(
+                "Recipe with id {recipe_id} is already in cart with id {cart_id}"
             )));
         }
         Err(_) => {

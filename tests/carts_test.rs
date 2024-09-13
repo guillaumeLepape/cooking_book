@@ -168,3 +168,34 @@ fn add_recipe_to_non_existing_cart_test(create_cart_and_recipe: (i32, i32, Clien
         }
     );
 }
+
+#[rstest]
+fn add_existing_recipe_to_cart_test(create_cart_and_recipe: (i32, i32, Client)) {
+    let (cart_id, recipe_id, client) = create_cart_and_recipe;
+
+    let add_recipe_to_cart_response = client
+        .post(format!("/carts/{}/recipes/{}", cart_id, recipe_id))
+        .dispatch();
+
+    assert_eq!(add_recipe_to_cart_response.status(), Status::Created);
+
+    let add_existing_recipe_to_cart_response = client
+        .post(format!("/carts/{}/recipes/{}", cart_id, recipe_id))
+        .dispatch();
+
+    assert_eq!(
+        add_existing_recipe_to_cart_response.status(),
+        Status::Conflict
+    );
+    assert_eq!(
+        add_existing_recipe_to_cart_response
+            .into_json::<Errors>()
+            .unwrap(),
+        Errors {
+            errors: vec![HTTPError {
+                status_code: Status::Conflict,
+                message: format!("Recipe with id {recipe_id} is already in cart with id {cart_id}")
+            }]
+        }
+    );
+}
