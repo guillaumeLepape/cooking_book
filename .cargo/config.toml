@@ -13,3 +13,4 @@ rustflags = [
     "-A",
     "clippy::missing_panics_doc",
 ]
+target-dir = "target/dev"
