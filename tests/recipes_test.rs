@@ -12,7 +12,7 @@ use common::client;
 #[rstest]
 fn create_and_retrieve_recipe(client: Client) {
     let create_recipe_response = client
-        .post("/recipes")
+        .post("/api/recipes")
         .json(&json!(
             {
                 "name": "Saumon fumé à la poele",
@@ -48,7 +48,7 @@ fn create_and_retrieve_recipe(client: Client) {
 
     let recipe_id = recipe_out.data.id;
 
-    let retrieve_recipe_response = client.get(format!("/recipes/{recipe_id}")).dispatch();
+    let retrieve_recipe_response = client.get(format!("/api/recipes/{recipe_id}")).dispatch();
     assert_eq!(retrieve_recipe_response.status(), Status::Ok);
     assert_eq!(
         retrieve_recipe_response
@@ -60,7 +60,7 @@ fn create_and_retrieve_recipe(client: Client) {
 
 #[rstest]
 fn recipe_not_found_test(client: Client) {
-    let not_found_recipe_response = client.get("/recipes/1").dispatch();
+    let not_found_recipe_response = client.get("/api/recipes/1").dispatch();
 
     assert_eq!(not_found_recipe_response.status(), Status::NotFound);
     assert_eq!(
@@ -84,11 +84,12 @@ fn recipe_already_exist_test(client: Client) {
         }
     );
 
-    let create_recipe_response = client.post("/recipes").json(&recipe_in).dispatch();
+    let create_recipe_response = client.post("/api/recipes").json(&recipe_in).dispatch();
 
     assert_eq!(create_recipe_response.status(), Status::Created);
 
-    let create_recipe_already_exist_response = client.post("/recipes").json(&recipe_in).dispatch();
+    let create_recipe_already_exist_response =
+        client.post("/api/recipes").json(&recipe_in).dispatch();
 
     assert_eq!(
         create_recipe_already_exist_response.status(),
@@ -128,7 +129,7 @@ fn recipe_fetch_all_recipes_test(client: Client) {
 
     assert_eq!(
         client
-            .post("/recipes")
+            .post("/api/recipes")
             .json(&recipe_in1)
             .dispatch()
             .status(),
@@ -136,14 +137,14 @@ fn recipe_fetch_all_recipes_test(client: Client) {
     );
     assert_eq!(
         client
-            .post("/recipes")
+            .post("/api/recipes")
             .json(&recipe_in2)
             .dispatch()
             .status(),
         Status::Created
     );
 
-    let response_fetch_all_recipes = client.get("/recipes").dispatch();
+    let response_fetch_all_recipes = client.get("/api/recipes").dispatch();
 
     assert_eq!(response_fetch_all_recipes.status(), Status::Ok);
     assert_eq!(
