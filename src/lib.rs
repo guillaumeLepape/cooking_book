@@ -16,7 +16,7 @@ pub const DATABASE_URL: &str = "cooking_book.db";
 pub fn create_app() -> rocket::Rocket<rocket::Build> {
     rocket::build()
         .mount(
-            "/carts",
+            "/api/carts",
             rocket::routes![
                 cart_router::create,
                 cart_router::retrieve,
@@ -25,7 +25,7 @@ pub fn create_app() -> rocket::Rocket<rocket::Build> {
             ],
         )
         .mount(
-            "/recipes",
+            "/api/recipes",
             rocket::routes![
                 recipe_router::create,
                 recipe_router::retrieve_all,

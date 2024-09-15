@@ -13,7 +13,7 @@ use common::client;
 
 #[rstest]
 fn create_retrieve_delete_cart_test(client: Client) {
-    let create_cart_response = client.post("/carts").dispatch();
+    let create_cart_response = client.post("/api/carts").dispatch();
 
     assert_eq!(create_cart_response.status(), Status::Created);
 
@@ -30,7 +30,7 @@ fn create_retrieve_delete_cart_test(client: Client) {
 
     let cart_id = cart_with_recipe_out.data.id;
 
-    let retrieve_cart_response = client.get(format!("/carts/{cart_id}")).dispatch();
+    let retrieve_cart_response = client.get(format!("/api/carts/{cart_id}")).dispatch();
 
     assert_eq!(retrieve_cart_response.status(), Status::Ok);
     assert_eq!(
@@ -40,28 +40,28 @@ fn create_retrieve_delete_cart_test(client: Client) {
         cart_with_recipe_out
     );
 
-    let delete_cart_response = client.delete(format!("/carts/{cart_id}")).dispatch();
+    let delete_cart_response = client.delete(format!("/api/carts/{cart_id}")).dispatch();
 
     assert_eq!(delete_cart_response.status(), Status::NoContent);
 }
 
 #[rstest]
 fn retrieve_non_existing_cart_test(client: Client) {
-    let retrieve_cart_response = client.get("/carts/1").dispatch();
+    let retrieve_cart_response = client.get("/api/carts/1").dispatch();
 
     assert_eq!(retrieve_cart_response.status(), Status::NotFound);
 }
 
 #[rstest]
 fn delete_non_existing_cart_test(client: Client) {
-    let delete_cart_response = client.delete("/carts/1").dispatch();
+    let delete_cart_response = client.delete("/api/carts/1").dispatch();
 
     assert_eq!(delete_cart_response.status(), Status::NotFound);
 }
 
 #[rstest]
 fn add_recipe_to_cart_test(client: Client) {
-    let create_cart_response = client.post("/carts").dispatch();
+    let create_cart_response = client.post("/api/carts").dispatch();
 
     assert_eq!(create_cart_response.status(), Status::Created);
 
@@ -70,7 +70,7 @@ fn add_recipe_to_cart_test(client: Client) {
         .unwrap();
 
     let create_recipe_response = client
-        .post("/recipes")
+        .post("/api/recipes")
         .json(&json!({"name": "Recette 1", "ingredients": [], "steps": []}))
         .dispatch();
 
@@ -82,7 +82,7 @@ fn add_recipe_to_cart_test(client: Client) {
 
     let add_recipe_to_cart_response = client
         .post(format!(
-            "/carts/{}/recipes/{}",
+            "/api/carts/{}/recipes/{}",
             cart.data.id, recipe.data.id
         ))
         .dispatch();
@@ -101,7 +101,7 @@ fn add_recipe_to_cart_test(client: Client) {
 
 #[fixture]
 fn create_cart_and_recipe(client: Client) -> (i32, i32, Client) {
-    let create_cart_response = client.post("/carts").dispatch();
+    let create_cart_response = client.post("/api/carts").dispatch();
 
     assert_eq!(create_cart_response.status(), Status::Created);
 
@@ -112,7 +112,7 @@ fn create_cart_and_recipe(client: Client) -> (i32, i32, Client) {
         .id;
 
     let create_recipe_response = client
-        .post("/recipes")
+        .post("/api/recipes")
         .json(&json!({"name": "Recette", "ingredients": [], "steps": []}))
         .dispatch();
 
@@ -130,7 +130,7 @@ fn add_non_existing_recipe_to_cart_test(create_cart_and_recipe: (i32, i32, Clien
     let (cart_id, recipe_id, client) = create_cart_and_recipe;
 
     let add_non_existing_recipe_to_cart = client
-        .post(format!("/carts/{}/recipes/{}", cart_id, recipe_id + 1))
+        .post(format!("/api/carts/{}/recipes/{}", cart_id, recipe_id + 1))
         .dispatch();
 
     assert_eq!(add_non_existing_recipe_to_cart.status(), Status::NotFound);
@@ -152,7 +152,7 @@ fn add_recipe_to_non_existing_cart_test(create_cart_and_recipe: (i32, i32, Clien
     let (cart_id, recipe_id, client) = create_cart_and_recipe;
 
     let add_recipe_to_non_existing_cart = client
-        .post(format!("/carts/{}/recipes/{}", cart_id + 1, recipe_id))
+        .post(format!("/api/carts/{}/recipes/{}", cart_id + 1, recipe_id))
         .dispatch();
 
     assert_eq!(add_recipe_to_non_existing_cart.status(), Status::NotFound);
@@ -174,13 +174,13 @@ fn add_existing_recipe_to_cart_test(create_cart_and_recipe: (i32, i32, Client)) 
     let (cart_id, recipe_id, client) = create_cart_and_recipe;
 
     let add_recipe_to_cart_response = client
-        .post(format!("/carts/{}/recipes/{}", cart_id, recipe_id))
+        .post(format!("/api/carts/{}/recipes/{}", cart_id, recipe_id))
         .dispatch();
 
     assert_eq!(add_recipe_to_cart_response.status(), Status::Created);
 
     let add_existing_recipe_to_cart_response = client
-        .post(format!("/carts/{}/recipes/{}", cart_id, recipe_id))
+        .post(format!("/api/carts/{}/recipes/{}", cart_id, recipe_id))
         .dispatch();
 
     assert_eq!(
