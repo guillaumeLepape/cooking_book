@@ -1,0 +1,51 @@
+.recipe {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+
+    &__details {
+        border-bottom: 1px solid #b5bfd9;
+
+        &[open] {
+            box-shadow: -3px 0 0 #b5bfd9;
+        }
+    }
+
+    &__details summary {
+        user-select: none;
+        cursor: pointer;
+    }
+
+    &__summary {
+        padding: 1rem;
+        position: relative;
+        cursor: pointer;
+        list-style: none;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &:hover {
+            background-color: #f2f5f9;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &__content {
+        padding: 0 2rem 1rem;
+            font-size: .875em;
+    }
+
+    &__step,
+    &__ingredient{
+        &__title {
+            font-weight: $font-semi-bold;
+            margin-bottom: .5rem;
+        }
+    }
+}
