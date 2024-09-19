@@ -1,3 +1,6 @@
+use diesel::result::DatabaseErrorKind;
+use diesel::result::Error as DieselError;
+
 use crate::db::DBConnection;
 use crate::db_utils::insert_recipe;
 use crate::models::RecipeIn;
@@ -55,10 +58,11 @@ pub fn create_recipes(connection: &mut DBConnection) {
     ];
 
     for recipe in recipes {
-        println!("Inserting recipe: {}", recipe.name);
-
         match insert_recipe(&recipe, connection) {
-            Ok(recipe) => println!("Inserted recipe: {recipe:?}"),
+            Ok(recipe) => println!("Inserted recipe: {}", recipe.name),
+            Err(DieselError::DatabaseError(DatabaseErrorKind::UniqueViolation, _)) => {
+                println!("Recipe already exists: {}", recipe.name);
+            }
             Err(error) => {
                 eprintln!("Error inserting recipe: {error}");
                 std::process::exit(1);
