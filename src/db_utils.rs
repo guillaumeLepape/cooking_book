@@ -13,34 +13,31 @@ pub fn insert_recipe(
     recipe_in: &RecipeIn,
     connection: &mut SqliteConnection,
 ) -> Result<RecipeWithIngredientsOut, DieselError> {
-    let inserted_recipes: Vec<Recipe> = match diesel::insert_into(recipes::table)
-        .values(recipes::name.eq(&recipe_in.name))
-        .get_results(connection)
+    let id: i32 = match diesel::insert_into(recipes::table)
+        .values(&recipes::name.eq(&recipe_in.name))
+        .returning(&recipes::id)
+        .get_result(connection)
     {
         Ok(res) => res,
         Err(error) => return Err(error),
     };
 
-    let Some(recipe) = inserted_recipes.first() else {
-        return Err(DieselError::NotFound);
-    };
-
     let mut recipe_out = RecipeWithIngredientsOut {
-        id: recipe.id,
-        name: recipe.name.clone(),
+        id,
+        name: recipe_in.name.clone(),
         ingredients: Vec::with_capacity(recipe_in.ingredients.len()),
         steps: Vec::with_capacity(recipe_in.steps.len()),
     };
 
     for raw_ingredient in &recipe_in.ingredients {
-        match insert_ingredient(recipe.id, raw_ingredient, connection) {
+        match insert_ingredient(recipe_out.id, raw_ingredient, connection) {
             Ok(ingredient) => recipe_out.ingredients.push(ingredient),
             Err(error) => return Err(error),
         };
     }
 
     for step in &recipe_in.steps {
-        match insert_step(recipe.id, step.clone(), connection) {
+        match insert_step(recipe_out.id, step, connection) {
             Ok(step) => recipe_out.steps.push(step),
             Err(error) => return Err(error),
         };
@@ -56,47 +53,48 @@ fn insert_ingredient(
 ) -> Result<IngredientOut, DieselError> {
     let (name, preposition, quantity, unit) = parse(raw_ingredient).unwrap();
 
-    let inserted_ingredients: Vec<Ingredient> = match diesel::insert_into(ingredients::table)
+    let id: i32 = match diesel::insert_into(ingredients::table)
         .values((
-            ingredients::recipe_id.eq(recipe_id),
-            ingredients::preposition.eq(preposition),
-            ingredients::name.eq(name),
-            ingredients::quantity.eq(quantity),
-            ingredients::unit.eq(unit),
+            &ingredients::recipe_id.eq(&recipe_id),
+            &ingredients::preposition.eq(&preposition),
+            &ingredients::name.eq(&name),
+            &ingredients::quantity.eq(&quantity),
+            &ingredients::unit.eq(&unit),
         ))
-        .get_results(connection)
+        .returning(&ingredients::id)
+        .get_result(connection)
     {
         Ok(res) => res,
         Err(error) => return Err(error),
     };
 
-    let ingredient = inserted_ingredients.first().unwrap();
-
     Ok(IngredientOut {
-        id: ingredient.id,
-        preposition: ingredient.preposition.clone(),
-        name: ingredient.name.clone(),
-        quantity: ingredient.quantity,
-        unit: ingredient.unit.clone(),
+        id,
+        preposition,
+        name,
+        quantity,
+        unit,
     })
 }
 
 fn insert_step(
     recipe_id: i32,
-    step: String,
+    step: &str,
     connection: &mut SqliteConnection,
 ) -> Result<String, DieselError> {
-    let inserted_steps: Vec<Step> = match diesel::insert_into(steps::table)
-        .values((steps::recipe_id.eq(recipe_id), steps::description.eq(step)))
-        .get_results(connection)
+    let _: i32 = match diesel::insert_into(steps::table)
+        .values((
+            &steps::recipe_id.eq(&recipe_id),
+            &steps::description.eq(&step),
+        ))
+        .returning(&steps::id)
+        .get_result(connection)
     {
         Ok(res) => res,
         Err(error) => return Err(error),
     };
 
-    let step = inserted_steps.first().unwrap();
-
-    Ok(step.description.clone())
+    Ok(step.to_string())
 }
 
 pub fn fetch_one_recipe(
@@ -239,16 +237,12 @@ pub fn fetch_one_cart_and_recipes(
 }
 
 pub fn insert_cart(connection: &mut SqliteConnection) -> Result<CartWithRecipesOut, DieselError> {
-    let result: Vec<Cart> = match diesel::insert_into(carts::table)
+    let cart: Cart = match diesel::insert_into(carts::table)
         .default_values()
-        .get_results(connection)
+        .get_result(connection)
     {
         Ok(cart) => cart,
         Err(error) => return Err(error),
-    };
-
-    let Some(cart) = result.first() else {
-        return Err(DieselError::NotFound);
     };
 
     Ok(CartWithRecipesOut {
