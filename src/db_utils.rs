@@ -190,6 +190,10 @@ pub fn fetch_all_recipes(
     Ok(recipes_with_ingredients)
 }
 
+pub fn fetch_all_carts(connection: &mut SqliteConnection) -> Result<Vec<Cart>, DieselError> {
+    carts::table.select(Cart::as_select()).load(connection)
+}
+
 pub fn fetch_one_cart(
     cart_id: i32,
     connection: &mut SqliteConnection,

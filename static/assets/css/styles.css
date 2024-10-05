@@ -1,0 +1,475 @@
+/*=============== GOOGLE FONTS ===============*/
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+/*=============== VARIABLES SCSS ===============*/
+/*========== Colors ==========*/
+/*Color mode HSL(hue, saturation, lightness)*/
+/*========== Font and typography ==========*/
+/*.5rem = 8px | 1rem = 16px ...*/
+/*========== Font weight ==========*/
+/*========== z index ==========*/
+/*=============== BASE ===============*/
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+input,
+button {
+  font-family: "Open Sans", sans-serif;
+  font-size: 0.938rem;
+}
+
+body {
+  background-color: hsl(230, 100%, 98%);
+  color: hsl(230, 12%, 40%);
+}
+
+input,
+button {
+  border: none;
+  outline: none;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/*=============== REUSABLE CSS CLASSES ===============*/
+.container {
+  max-width: 1120px;
+  margin-inline: 1.5rem;
+}
+
+.main {
+  padding: 6rem 8rem 2.5rem;
+}
+.main__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -1;
+}
+
+.search,
+.login {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: hsla(230, 75%, 15%, 0.1);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 8rem 1.5rem 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.search__close,
+.login__close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-size: 1.5rem;
+  color: hsl(230, 75%, 15%);
+  cursor: pointer;
+}
+
+/*=============== HEADER & NAV ===============*/
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: hsl(230, 100%, 98%);
+  box-shadow: 0 2px 16px hsla(230, 75%, 32%, 0.15);
+  z-index: 100;
+}
+
+.nav {
+  height: 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav__logo {
+  color: hsl(230, 75%, 15%);
+  font-weight: 600;
+  transition: color 0.4s;
+}
+.nav__actions {
+  display: flex;
+  align-items: center;
+  column-gap: 1rem;
+}
+.nav__search, .nav__login, .nav__toggle, .nav__close {
+  font-size: 1.25rem;
+  color: hsl(230, 75%, 15%);
+  cursor: pointer;
+  transition: color 0.4s;
+}
+:is(.nav__logo, .nav__search, .nav__login, .nav__toggle, .nav__link):hover {
+  color: hsl(230, 75%, 56%);
+}
+@media screen and (max-width: 1023px) {
+  .nav__menu {
+    position: fixed;
+    top: -100%;
+    left: 0;
+    background-color: hsl(230, 100%, 98%);
+    box-shadow: 0 8px 16px hsla(230, 75%, 32%, 0.15);
+    width: 100%;
+    padding-block: 4.5rem 4rem;
+    transition: top 0.4s;
+  }
+}
+.nav__list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2.5rem;
+  text-align: center;
+}
+.nav__link {
+  color: hsl(230, 75%, 15%);
+  font-weight: 600;
+  transition: color 0.4s;
+  cursor: pointer;
+}
+.nav__close {
+  position: absolute;
+  top: 1.15rem;
+  right: 1.5rem;
+}
+
+/* Show menu */
+.show-menu {
+  top: 0;
+}
+
+/*=============== SEARCH ===============*/
+.search__form {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+  background-color: hsl(230, 100%, 97%);
+  box-shadow: 0 8px 32px hsla(230, 75%, 15%, 0.2);
+  padding-inline: 1rem;
+  border-radius: 0.5rem;
+  transform: translateY(-1rem);
+  transition: transform 0.4s;
+}
+.search__icon {
+  font-size: 1.25rem;
+  color: hsl(230, 75%, 15%);
+}
+.search__input {
+  width: 100%;
+  padding-block: 1rem;
+  background-color: hsl(230, 100%, 97%);
+  color: hsl(230, 12%, 40%);
+}
+.search__input::placeholder {
+  color: hsl(230, 12%, 40%);
+}
+
+/* Show search */
+.show-search {
+  opacity: 1;
+  pointer-events: initial;
+}
+.show-search .search__form {
+  transform: translateY(0);
+}
+
+.search-container {
+  width: 30rem;
+  display: flex;
+  margin: 0 auto;
+}
+
+.search-bar {
+  margin: 0 auto;
+  width: 100%;
+  height: 45px;
+  padding: 0 20px;
+  font-size: 1rem;
+  outline: none;
+}
+.search-bar__erase {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  /* or
+          object-fit: cover; */
+}
+.search-bar:focus {
+  border: 1px solid #008ABF;
+  transition: 0.35s ease;
+  color: #008ABF;
+}
+.search-bar:focus::-webkit-input-placeholder {
+  transition: opacity 0.45s ease;
+  opacity: 0;
+}
+.search-bar:focus::-moz-placeholder {
+  transition: opacity 0.45s ease;
+  opacity: 0;
+}
+.search-bar:focus:-ms-placeholder {
+  transition: opacity 0.45s ease;
+  opacity: 0;
+}
+
+.clear-input-container {
+  width: 30rem;
+  display: flex;
+  margin: 0 auto;
+  display: flex;
+  margin: 0 auto;
+  border: 1px solid #D0CFCE;
+  border-radius: 25px;
+  position: relative;
+}
+
+.clear-input {
+  margin: 0 auto;
+  width: 100%;
+  height: 45px;
+  padding: 0 20px;
+  font-size: 1rem;
+  border: 1px solid #D0CFCE;
+  border-radius: 25px;
+  outline: none;
+}
+
+.clear-input-button {
+  /* button position */
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  bottom: 0;
+  /* button appearane */
+  justify-content: center;
+  align-items: center;
+  width: 33px;
+  height: 33px;
+  appearance: none;
+  border: none;
+  border-radius: 50%;
+  background: gray;
+  margin: 0;
+  padding: 2px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  /* hide the button initially */
+  display: none;
+}
+
+.clear-input-button:hover {
+  background: darkgray;
+}
+
+.clear-input--touched:focus + .clear-input-button,
+.clear-input--touched:hover + .clear-input-button,
+.clear-input--touched + .clear-input-button:hover {
+  display: inline-flex;
+}
+
+/*=============== LOGIN ===============*/
+.login__form, .login__group {
+  display: grid;
+}
+.login__form {
+  background-color: hsl(230, 100%, 97%);
+  padding: 2rem 1.5rem 2.5rem;
+  box-shadow: 0 8px 32px hsla(230, 75%, 15%, 0.2);
+  border-radius: 1rem;
+  row-gap: 1.25rem;
+  text-align: center;
+  transform: translateY(-1rem);
+  transition: transform 0.4s;
+}
+.login__title {
+  font-size: 1.25rem;
+  color: hsl(230, 75%, 15%);
+}
+.login__group {
+  row-gap: 1rem;
+}
+.login__label {
+  display: block;
+  text-align: initial;
+  color: hsl(230, 75%, 15%);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+.login__input {
+  width: 100%;
+  background-color: hsl(230, 100%, 97%);
+  border: 2px solid hsl(230, 25%, 80%);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: hsl(230, 12%, 40%);
+}
+.login__input::placeholder {
+  color: hsl(230, 12%, 40%);
+}
+.login__signup {
+  margin-bottom: 0.5rem;
+}
+.login__signup a {
+  color: hsl(230, 75%, 56%);
+}
+.login__forgot {
+  display: inline-block;
+  color: hsl(230, 75%, 56%);
+  margin-bottom: 1.25rem;
+}
+.login__button {
+  display: inline-block;
+  background-color: hsl(230, 75%, 56%);
+  width: 100%;
+  color: #fff;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: box-shadow 0.4s;
+}
+.login__button:hover {
+  box-shadow: 0 4px 24px hsla(230, 75%, 40%, 0.4);
+}
+
+/* Show login */
+.show-login {
+  opacity: 1;
+  pointer-events: initial;
+}
+.show-login .login__form {
+  transform: translateY(0);
+}
+
+.recipe {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.recipe__details {
+  border-bottom: 1px solid #b5bfd9;
+}
+.recipe__details[open] {
+  box-shadow: -3px 0 0 #b5bfd9;
+}
+.recipe__details summary {
+  user-select: none;
+  cursor: pointer;
+}
+.recipe__summary {
+  padding: 1rem;
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+}
+.recipe__summary::-webkit-details-marker {
+  display: none;
+}
+.recipe__summary:hover {
+  background-color: #f2f5f9;
+}
+.recipe__summary:focus {
+  outline: none;
+}
+.recipe__content {
+  padding: 0 2rem 1rem;
+  font-size: 0.875em;
+}
+.recipe__step__title, .recipe__ingredient__title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/*=============== BREAKPOINTS ===============*/
+/* For smartphones */
+@media screen and (max-width: 768px) {
+  .main {
+    padding: 6rem 2rem 2.5rem;
+  }
+  .search-container {
+    width: 100%;
+  }
+}
+/* For medium devices */
+@media screen and (min-width: 576px) {
+  .search,
+  .login {
+    padding-top: 10rem;
+  }
+  .search__form {
+    max-width: 450px;
+    margin-inline: auto;
+  }
+  .search__close,
+  .login__close {
+    width: max-content;
+    top: 5rem;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    font-size: 2rem;
+  }
+  .login__form {
+    max-width: 400px;
+    margin-inline: auto;
+  }
+}
+/* For large devices */
+@media screen and (min-width: 1023px) {
+  .nav {
+    height: 5.5rem;
+    column-gap: 3rem;
+  }
+  .nav__close, .nav__toggle {
+    display: none;
+  }
+  .nav__menu {
+    margin-left: auto;
+  }
+  .nav__list {
+    flex-direction: row;
+    column-gap: 3rem;
+  }
+  .login__form {
+    padding: 3rem 2rem 3.5rem;
+  }
+}
+@media screen and (min-width: 1150px) {
+  .container {
+    margin-inline: auto;
+  }
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,124 @@
+.search-container {
+    width: 30rem;
+    display: flex;
+    margin: 0 auto;
+}
+
+.search-bar {
+    margin: 0 auto;
+    width: 100%;
+    height: 45px;
+    padding: 0 20px;
+    font-size: 1rem;
+    // border: 1px solid #D0CFCE;
+    // border-radius: 25px;
+    outline: none;
+
+    &__erase {
+        position: absolute;
+
+        width: 45px;
+        //     // position: relative;
+        //     // float: right;
+
+        // & > i {
+        // width: 45px;
+        height: 45px;
+        // position: absolute;
+
+        //     object-fit: cover;
+        /* or
+                object-fit: cover; */
+
+        // transform: translateY(-50%);
+        // color: #D0CFCE;
+        // cursor: pointer;
+    }
+
+    // }
+
+    &:focus {
+        border: 1px solid #008ABF;
+        transition: 0.35s ease;
+        color: #008ABF;
+
+        &::-webkit-input-placeholder {
+            transition: opacity 0.45s ease;
+            opacity: 0;
+        }
+
+        &::-moz-placeholder {
+            transition: opacity 0.45s ease;
+            opacity: 0;
+        }
+
+        &:-ms-placeholder {
+            transition: opacity 0.45s ease;
+            opacity: 0;
+        }
+    }
+}
+
+
+.clear-input-container {
+    width: 30rem;
+    display: flex;
+    margin: 0 auto;
+
+    display: flex;
+    margin: 0 auto;
+
+    border: 1px solid #D0CFCE;
+    border-radius: 25px;
+
+    position: relative;
+}
+
+.clear-input {
+    margin: 0 auto;
+    width: 100%;
+    height: 45px;
+    padding: 0 20px;
+    font-size: 1rem;
+    border: 1px solid #D0CFCE;
+    border-radius: 25px;
+    outline: none;
+}
+
+.clear-input-button {
+    /* button position */
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    bottom: 0;
+    /* button appearane */
+    justify-content: center;
+    align-items: center;
+    width: 33px;
+    height: 33px;
+    appearance: none;
+    border: none;
+    border-radius: 50%;
+    background: gray;
+    margin: 0;
+    padding: 2px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    /* hide the button initially */
+    display: none;
+}
+
+.clear-input-button:hover {
+    background: darkgray;
+}
+
+.clear-input--touched:focus+.clear-input-button,
+.clear-input--touched:hover+.clear-input-button,
+.clear-input--touched+.clear-input-button:hover {
+    display: inline-flex;
+}
+
+//   body {
+//     margin: 40px;
+//   }

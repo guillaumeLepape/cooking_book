@@ -9,6 +9,9 @@ pub mod script;
 
 use crate::router::carts as cart_router;
 use crate::router::recipes as recipe_router;
+use crate::router::ssr_pages as ssr_pages_router;
+use rocket::fs::{relative, FileServer};
+use rocket_dyn_templates::Template;
 
 pub const DATABASE_URL: &str = "cooking_book.db";
 
@@ -32,4 +35,14 @@ pub fn create_app() -> rocket::Rocket<rocket::Build> {
                 recipe_router::retrieve,
             ],
         )
+        .mount(
+            "/",
+            rocket::routes![
+                ssr_pages_router::index,
+                ssr_pages_router::recipes,
+                ssr_pages_router::carts
+            ],
+        )
+        .mount("/static", FileServer::from(relative!("static")))
+        .attach(Template::fairing())
 }

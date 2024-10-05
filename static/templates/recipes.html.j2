@@ -1,0 +1,38 @@
+<div class="clear-input-container">
+  <input id="clear-input" class="clear-input" type="text" onkeyup="searchInRecipes()" placeholder="Recherche une recette ...">
+  <button
+    class="clear-input-button"
+    aria-label="Clear input"
+    title="Clear input"
+    onclick="document.getElementById('clear-input').value = ''; searchInRecipes();"
+  >×</button>
+</div>
+<div id="all-recipes">
+{% for recipe in recipes %}
+    <div id="recipe" class="recipe">
+        <details class="recipe__details">
+            <summary id="recipe-summary" class="recipe__summary">{{ recipe.name }}</summary>
+            <div class="recipe__content">
+                <h3 class="recipe__ingredient__title">Ingredients</h3>
+                <ul>
+                    {% for ingredient in recipe.ingredients %}
+                        {% if ((ingredient.quantity|round - ingredient.quantity)|abs() < 0.01) %}
+                            <li>{{ ingredient.quantity|int }} {{ ingredient.unit }} {{ ingredient.preposition }}{{ ingredient.name }}</li>
+                        {% else %}
+                            <li>{{ ingredient.quantity }} {{ ingredient.unit }} {{ ingredient.preposition }}{{ ingredient.name }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="recipe__content">
+                <h3 class="recipe__step__title">Instructions</h3>
+                <ol>
+                    {% for step in recipe.steps %}
+                        <li>{{ step }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </details>
+    </div>
+{% endfor %}
+</div>

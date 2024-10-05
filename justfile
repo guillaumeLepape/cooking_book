@@ -6,6 +6,7 @@ alias r := run
 alias c := check
 alias f := fmt
 alias l := lint
+alias re := render
 
 setup:
     just build
@@ -31,3 +32,6 @@ fmt:
 
 lint:
     cargo clippy
+
+render:
+    sass --watch {{ justfile_directory() }}/static/assets/scss/styles.scss {{ justfile_directory() }}/static/assets/css/styles.css
